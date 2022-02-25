@@ -14,7 +14,6 @@ REM Copy empty file
 fc Empty.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 1 passed
 
-
 REM Copy non empty file
 %MyProgram% NonEmptyFile.txt "%TEMP%\output.txt" || goto err
 fc NonEmptyFile.txt "%TEMP%\output.txt" > nul || goto err

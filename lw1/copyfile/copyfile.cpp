@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 	input.open(args->inputFileName);
 	if (!input.is_open())
 	{
-		std::cout << "Failed to opne '" << args->inputFileName << "' for reading\n";
+		std::cout << "Failed to open '" << args->inputFileName << "' for reading\n";
 		return 1;
 	}
 
