@@ -72,7 +72,7 @@ std::string ReplaceString(const std::string& str, const std::string& searchStr, 
 		std::copy(searchingStartPos, it, std::back_inserter(resultStr));
 		resultStr.append(replaceStr);
 		searchingStartPos = it + searchStr.length();
-		it = std::search(searchingStartPos, str.end(), searcher);//sercher
+		it = std::search(searchingStartPos, str.end(), searcher); //searcher
 	}
 	std::copy(searchingStartPos, str.end(), std::back_inserter(resultStr));
     
