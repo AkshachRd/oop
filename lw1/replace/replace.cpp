@@ -52,7 +52,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 
 std::string ReplaceString(const std::string& str, const std::string& searchStr, const std::string& replaceStr)
 {
-	if (!searchStr.length())
+	if (searchStr.empty())
 	{
 		return str;
 	}
@@ -60,21 +60,21 @@ std::string ReplaceString(const std::string& str, const std::string& searchStr, 
 	std::string resultStr;
 	auto searchingStartPos = str.begin();
 	const std::boyer_moore_searcher searcher(searchStr.begin(), searchStr.end());
-	auto it = std::search(searchingStartPos, str.end(), searcher);
+	auto replacingPos = std::search(searchingStartPos, str.end(), searcher);
 
-	if (it == str.end())
+	if (replacingPos == str.end())
 	{
 		return str;
 	}
 
-	while (it != str.end())
+	while (replacingPos != str.end())
 	{
-		std::copy(searchingStartPos, it, std::back_inserter(resultStr));
-		resultStr.append(replaceStr);
-		searchingStartPos = it + searchStr.length();
-		it = std::search(searchingStartPos, str.end(), searcher); //searcher
+		resultStr += str.substr(searchingStartPos - str.begin(), replacingPos - searchingStartPos);
+		resultStr += replaceStr;
+		searchingStartPos = replacingPos + searchStr.length();
+		replacingPos = std::search(searchingStartPos, str.end(), searcher);
 	}
-	std::copy(searchingStartPos, str.end(), std::back_inserter(resultStr));
+	resultStr += str.substr(searchingStartPos - str.begin(), str.end() - searchingStartPos);
     
 	return resultStr;
 }
