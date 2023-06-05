@@ -6,10 +6,22 @@ Car::Car()
     : m_isTurnedOn(false), m_speed(0), m_gear(0), m_direction(Direction::StandingStill)
 {}
 
-bool Car::IsTurnedOn() const { return m_isTurnedOn; }
-Direction Car::GetDirection() const { return m_direction; }
-int Car::GetSpeed() const { return abs(m_speed); }
-int Car::GetGear() const { return m_gear; }
+bool Car::IsTurnedOn() const
+{
+    return m_isTurnedOn;
+}
+Direction Car::GetDirection() const
+{
+    return m_direction;
+}
+int Car::GetSpeed() const
+{
+    return abs(m_speed);
+}
+int Car::GetGear() const
+{
+    return m_gear;
+}
 
 bool Car::TurnOnEngine()
 {

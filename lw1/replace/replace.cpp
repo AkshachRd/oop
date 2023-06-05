@@ -69,17 +69,18 @@ std::string ReplaceString(const std::string& str, const std::string& searchStr, 
 
 	while (replacingPos != str.end())
 	{
-		resultStr += str.substr(searchingStartPos - str.begin(), replacingPos - searchingStartPos);
-		resultStr += replaceStr;
+		resultStr.append(searchingStartPos, replacingPos);
+		resultStr.append(replaceStr);
 		searchingStartPos = replacingPos + searchStr.length();
 		replacingPos = std::search(searchingStartPos, str.end(), searcher);
 	}
-	resultStr += str.substr(searchingStartPos - str.begin(), str.end() - searchingStartPos);
+	resultStr.append(searchingStartPos, str.end());
     
 	return resultStr;
 }
 
-void ReplaceStream(std::ifstream& input, std::ofstream& output, const std::string& searchStr,
+// istream, ostream
+void ReplaceStream(std::istream& input, std::ostream& output, const std::string& searchStr,
 	const std::string& replaceStr)
 {
 	std::string line;
