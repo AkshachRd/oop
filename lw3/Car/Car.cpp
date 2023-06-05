@@ -4,9 +4,7 @@ using namespace std;
 
 Car::Car()
     : m_isTurnedOn(false), m_speed(0), m_gear(0), m_direction(Direction::StandingStill)
-{
-
-}
+{}
 
 bool Car::IsTurnedOn() const { return m_isTurnedOn; }
 Direction Car::GetDirection() const { return m_direction; }
