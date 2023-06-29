@@ -1,8 +1,17 @@
 #pragma once
-#include <array>
+#include <istream>
+#include <ostream>
 
-static const std::array<int, 13> DaysToMonth365 = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
-static const std::array<int, 13> DaysToMonth366 = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
+const int MIN_DAY = 1;
+const int MIN_MONTH = 1;
+const int MAX_MONTH = 12;
+const int MIN_YEAR = 1970;
+const int MAX_YEAR = 9999;
+const int QUANTITY_DAYS_LEAP_YEAR = 366;
+const int QUANTITY_DAYS_YEAR = 365;
+const int QUANTITY_MONTH = 12;
+const int WEEKDAY_MIN_DAY = 4;
+const int QUANTITY_WEEKDAY = 7;
 
 // Месяц
 enum class Month
@@ -49,10 +58,54 @@ public:
 	//	CDate date(1, January, 1970); --date;
 	// метод date.IsValid() должен вернуть false;
 	bool IsValid() const;
-private:
-	bool IsLeapYear(unsigned year);
-	unsigned DateToTicks(unsigned day, Month month, unsigned year);
 
-	bool m_isValid;
-	unsigned m_timestamp;
+	// Переводит дату на следующий день
+	CDate& operator++();     // префиксная форма
+	CDate operator++(int);   // постфиксная форма
+
+	// Переводит дату на предыдущий день
+	CDate& operator--();     // префиксная форма
+	CDate operator--(int);   // постфиксная форма
+
+	// Прибавляет к дате заданное целое количество дней
+	CDate operator+(unsigned days) const;
+
+	// Вычитает из даты заданное количество дней или находит разность двух дат в днях
+	CDate operator-(unsigned days) const;
+	unsigned operator-(const CDate& other) const;
+
+	// Прибавляет к дате заданное целое количество дней
+	CDate& operator+=(unsigned days);
+
+	// Вычитает из даты заданное количество дней
+	CDate& operator-=(unsigned days);
+
+	// Оператор вывода даты в поток вывода в формате ДД.ММ.ГГГГ
+	friend std::ostream& operator<<(std::ostream& os, const CDate& date);
+
+	// Оператор ввода времени из потока ввода в формате ДД.ММ.ГГГГ
+	friend std::istream& operator>>(std::istream& is, CDate& date);
+
+	// Проверка двух дат на равенство
+	bool operator==(const CDate& other) const;
+
+	// Проверка двух дат на строгое и несртогое неравенства
+	std::strong_ordering operator<=>(const CDate& other) const;
+private:
+	int m_days;
+
+	// Возвращает количество дней в заданном месяце и году
+	static unsigned GetDaysInMonth(Month month, unsigned year);
+
+	// Проверяет, является ли год високосным
+	static bool IsLeapYear(unsigned year);
+
+	// Проверяет, является ли дата допустимой
+	bool CheckValidity(unsigned day, Month month, unsigned year) const;
+
+	// Преобразует дату в количество дней после 1 января 1970 года
+	unsigned DateToTimestamp(unsigned day, Month month, unsigned year) const;
+
+	// Преобразует количество дней после 1 января 1970 года в дату
+	void TimestampToDate(unsigned timestamp, unsigned& day, Month& month, unsigned& year) const;
 };
