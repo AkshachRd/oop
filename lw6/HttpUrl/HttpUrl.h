@@ -4,7 +4,7 @@
 #include <regex>
 
 const unsigned short DEFAULT_HTTP_PORT = 80;
-const unsigned short DEFAULT_HTTPS_PORT = 443; //swap
+const unsigned short DEFAULT_HTTPS_PORT = 443;
 
 const unsigned short MIN_PORT = 0;
 const unsigned short MAX_PORT = 65535;
@@ -34,6 +34,7 @@ private:
     static unsigned short ParsePort(std::string const& strPort, Protocol const& protocol);
     static std::string ParseDomain(std::string const& domain);
     static std::string ParseDocument(std::string const& document);
+
     static std::string GetStrFromProtocol(Protocol protocol);
     static unsigned short ProtocolToDefaultPort(Protocol const& protocol);
 
