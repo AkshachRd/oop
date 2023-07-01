@@ -5,21 +5,17 @@ const std::string VALID_STR_URL = "http://hello.com:85/hello.html";
 const std::string VALID_STR_URL2 = "https://hello.com/hello.html";
 const std::string VALID_STR_URL3 = "http://hello.com/hello.html";
 const std::string VALID_STR_URL4 = "https://hello.com/hello.html";
+const std::string VALID_STR_URL5 = "http://hello.com/hello:83";
+const std::string VALID_STR_URL6 = "https://hello.com/hello:83";
 const std::string VALID_STR_URL_DOMAIN = "hello.com";
 const unsigned short VALID_STR_URL_PORT = 85;
 const std::string VALID_STR_URL_DOCUMENT = "/hello.html";
 const std::string DOCUMENT_WITHOUT_SLASH = "hello.html";
+const std::string DOCUMENT_WITH_PORT = "/hello:83";
+
 
 TEST_CASE("Valid initialization check")
 {
-	CHttpUrl validUrl1(VALID_STR_URL);
-
-	REQUIRE(validUrl1.GetURL() == VALID_STR_URL);
-	REQUIRE(validUrl1.GetProtocol() == Protocol::HTTP);
-	REQUIRE(validUrl1.GetDomain() == VALID_STR_URL_DOMAIN);
-	REQUIRE(validUrl1.GetPort() == VALID_STR_URL_PORT);
-	REQUIRE(validUrl1.GetDocument() == VALID_STR_URL_DOCUMENT);
-
 	CHttpUrl validUrl2(VALID_STR_URL_DOMAIN, VALID_STR_URL_DOCUMENT, Protocol::HTTPS);
 
 	REQUIRE(validUrl2.GetURL() == VALID_STR_URL2);
@@ -27,6 +23,14 @@ TEST_CASE("Valid initialization check")
 	REQUIRE(validUrl2.GetDomain() == VALID_STR_URL_DOMAIN);
 	REQUIRE(validUrl2.GetPort() == DEFAULT_HTTPS_PORT);
 	REQUIRE(validUrl2.GetDocument() == VALID_STR_URL_DOCUMENT);
+
+	CHttpUrl validUrl1(VALID_STR_URL);
+
+	REQUIRE(validUrl1.GetURL() == VALID_STR_URL);
+	REQUIRE(validUrl1.GetProtocol() == Protocol::HTTP);
+	REQUIRE(validUrl1.GetDomain() == VALID_STR_URL_DOMAIN);
+	REQUIRE(validUrl1.GetPort() == VALID_STR_URL_PORT);
+	REQUIRE(validUrl1.GetDocument() == VALID_STR_URL_DOCUMENT);
 
 	CHttpUrl validUrl3(VALID_STR_URL_DOMAIN, DOCUMENT_WITHOUT_SLASH, Protocol::HTTP, VALID_STR_URL_PORT);
 
@@ -51,6 +55,22 @@ TEST_CASE("Valid initialization check")
 	REQUIRE(validUrl5.GetDomain() == VALID_STR_URL_DOMAIN);
 	REQUIRE(validUrl5.GetPort() == DEFAULT_HTTPS_PORT);
 	REQUIRE(validUrl5.GetDocument() == VALID_STR_URL_DOCUMENT);
+
+	CHttpUrl validUrl6(VALID_STR_URL5);
+
+	REQUIRE(validUrl6.GetURL() == VALID_STR_URL5);
+	REQUIRE(validUrl6.GetProtocol() == Protocol::HTTP);
+	REQUIRE(validUrl6.GetDomain() == VALID_STR_URL_DOMAIN);
+	REQUIRE(validUrl6.GetPort() == DEFAULT_HTTP_PORT);
+	REQUIRE(validUrl6.GetDocument() == DOCUMENT_WITH_PORT);
+
+	CHttpUrl validUrl7(VALID_STR_URL6);
+
+	REQUIRE(validUrl7.GetURL() == VALID_STR_URL6);
+	REQUIRE(validUrl7.GetProtocol() == Protocol::HTTPS);
+	REQUIRE(validUrl7.GetDomain() == VALID_STR_URL_DOMAIN);
+	REQUIRE(validUrl7.GetPort() == DEFAULT_HTTPS_PORT);
+	REQUIRE(validUrl7.GetDocument() == DOCUMENT_WITH_PORT);
 };
 
 TEST_CASE("Invalid initialization check")

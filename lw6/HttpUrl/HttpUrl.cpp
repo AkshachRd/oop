@@ -12,38 +12,62 @@ const std::regex DOCUMENT_REG(DOCUMENT_REGULAR_EXPRESSION, std::regex_constants:
 
 CHttpUrl::CHttpUrl(const std::string& url)
 {
-    ParseUrl(url);
+    std::smatch matches;
+
+    std::regex_search(url, matches, HTTP_URL_REG);
+
+    if (matches.size() != 5)
+    {
+        throw CUrlParsingError("invalid url");
+    }
+
+    m_domain = matches[2];
+    m_document = matches[4].str();
+    try
+    {
+        m_protocol = ParseProtocol(matches[1]);
+        m_port = ParsePort(matches[3], m_protocol);
+    }
+    catch (CUrlParsingError const& error)
+    {
+        throw error;
+    }
+
+    m_url = BuildUrl(m_domain, m_document, m_protocol, m_port);
 }
 
 CHttpUrl::CHttpUrl(const std::string& domain, const std::string& document, Protocol protocol)
 {
+    m_protocol = protocol;
     try
     {
-        std::string domainStr = ParseDomain(domain);
-        std::string documentStr = ParseDocument(document);
-        unsigned short port = ProtocolToDefaultPort(protocol);
-
-        Initialize(domainStr, documentStr, protocol, port);
+        m_domain = ParseDomain(domain);
+        m_document = ParseDocument(document);
+        m_port = ProtocolToDefaultPort(protocol);
     }
     catch (CUrlParsingError const& error)
     {
         throw error;
     }
+
+    m_url = BuildUrl(m_domain, m_document, m_protocol, m_port);
 }
 
 CHttpUrl::CHttpUrl(const std::string& domain, const std::string& document, Protocol protocol, unsigned short port)
 {
+    m_protocol = protocol;
+    m_port = port;
     try
     {
-        std::string domainStr = ParseDomain(domain);
-        std::string documentStr = ParseDocument(document);
-
-        Initialize(domainStr, documentStr, protocol, port);
+        m_domain = ParseDomain(domain);
+        m_document = ParseDocument(document);
     }
     catch (CUrlParsingError const& error)
     {
         throw error;
     }
+
+    m_url = BuildUrl(m_domain, m_document, m_protocol, m_port);
 }
 
 std::string CHttpUrl::GetURL() const
@@ -71,32 +95,8 @@ unsigned short CHttpUrl::GetPort() const
     return m_port;
 }
 
-void CHttpUrl::ParseUrl(const std::string& url)
+std::string CHttpUrl::BuildUrl(const std::string& domain, const std::string& document, Protocol protocol, unsigned short port)
 {
-    std::smatch matches;
-
-    std::regex_search(url, matches, HTTP_URL_REG);
-
-    if (matches.size() != 5)
-    {
-        throw CUrlParsingError("invalid url");
-    }
-
-    Protocol protocol = ParseProtocol(matches[1]);
-    unsigned short port = ParsePort(matches[3]);
-    std::string domain = matches[2];
-    std::string document = matches[4].str();
-
-    Initialize(domain, document, protocol, port);
-}
-
-void CHttpUrl::Initialize(const std::string& domain, const std::string& document, Protocol protocol, unsigned short port)
-{
-    m_domain = domain;
-    m_document = document;
-    m_protocol = protocol;
-    m_port = port;
-
     std::ostringstream urlStream;
     urlStream << GetStrFromProtocol(protocol) << "://" << domain;
     if (port != DEFAULT_HTTP_PORT && port != DEFAULT_HTTPS_PORT)
@@ -105,10 +105,10 @@ void CHttpUrl::Initialize(const std::string& domain, const std::string& document
     }
     urlStream << document;
 
-    m_url = urlStream.str();
+    return urlStream.str();
 }
 
-std::string CHttpUrl::GetStrFromProtocol(Protocol protocol) const
+std::string CHttpUrl::GetStrFromProtocol(Protocol protocol)
 {
     switch (protocol)
     {
@@ -137,23 +137,23 @@ Protocol CHttpUrl::ParseProtocol(std::string const& strProtocol)
     }
 };
 
-unsigned short CHttpUrl::ProtocolToDefaultPort(Protocol const& protocol) const
+unsigned short CHttpUrl::ProtocolToDefaultPort(Protocol const& protocol)
 {
     return (protocol == Protocol::HTTP) ? DEFAULT_HTTP_PORT : DEFAULT_HTTPS_PORT;
 };
 
-unsigned short CHttpUrl::ParsePort(std::string const& strPort)
+unsigned short CHttpUrl::ParsePort(std::string const& strPort, Protocol const& protocol)
 {
     if (strPort.length() == 0)
     {
-        return ProtocolToDefaultPort(m_protocol);
+        return ProtocolToDefaultPort(protocol);
     }
 
     try
     {
         int port = std::stoi(strPort);
 
-        if (port >= 0 && port <= 65535)
+        if (port >= MIN_PORT && port <= MAX_PORT)
         {
             return static_cast<unsigned short>(port);
         }
