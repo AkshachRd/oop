@@ -16,14 +16,6 @@ const std::string DOCUMENT_WITH_PORT = "/hello:83";
 
 TEST_CASE("Valid initialization check")
 {
-	CHttpUrl validUrl2(VALID_STR_URL_DOMAIN, VALID_STR_URL_DOCUMENT, Protocol::HTTPS);
-
-	REQUIRE(validUrl2.GetURL() == VALID_STR_URL2);
-	REQUIRE(validUrl2.GetProtocol() == Protocol::HTTPS);
-	REQUIRE(validUrl2.GetDomain() == VALID_STR_URL_DOMAIN);
-	REQUIRE(validUrl2.GetPort() == DEFAULT_HTTPS_PORT);
-	REQUIRE(validUrl2.GetDocument() == VALID_STR_URL_DOCUMENT);
-
 	CHttpUrl validUrl1(VALID_STR_URL);
 
 	REQUIRE(validUrl1.GetURL() == VALID_STR_URL);
@@ -31,6 +23,14 @@ TEST_CASE("Valid initialization check")
 	REQUIRE(validUrl1.GetDomain() == VALID_STR_URL_DOMAIN);
 	REQUIRE(validUrl1.GetPort() == VALID_STR_URL_PORT);
 	REQUIRE(validUrl1.GetDocument() == VALID_STR_URL_DOCUMENT);
+
+	CHttpUrl validUrl2(VALID_STR_URL_DOMAIN, VALID_STR_URL_DOCUMENT, Protocol::HTTPS);
+
+	REQUIRE(validUrl2.GetURL() == VALID_STR_URL2);
+	REQUIRE(validUrl2.GetProtocol() == Protocol::HTTPS);
+	REQUIRE(validUrl2.GetDomain() == VALID_STR_URL_DOMAIN);
+	REQUIRE(validUrl2.GetPort() == DEFAULT_HTTPS_PORT);
+	REQUIRE(validUrl2.GetDocument() == VALID_STR_URL_DOCUMENT);
 
 	CHttpUrl validUrl3(VALID_STR_URL_DOMAIN, DOCUMENT_WITHOUT_SLASH, Protocol::HTTP, VALID_STR_URL_PORT);
 
@@ -66,6 +66,7 @@ TEST_CASE("Valid initialization check")
 
 	CHttpUrl validUrl7(VALID_STR_URL6);
 
+	// check url
 	REQUIRE(validUrl7.GetURL() == VALID_STR_URL6);
 	REQUIRE(validUrl7.GetProtocol() == Protocol::HTTPS);
 	REQUIRE(validUrl7.GetDomain() == VALID_STR_URL_DOMAIN);
@@ -94,6 +95,8 @@ TEST_CASE("Invalid initialization check")
 		std::string textError = e.what();
 		REQUIRE(textError == "error parsing port");
 	}
+
+	// port corner case
 
 	try
 	{

@@ -30,16 +30,6 @@ public:
     unsigned short GetPort() const;
 
 private:
-    static Protocol ParseProtocol(std::string const& strProtocol);
-    static unsigned short ParsePort(std::string const& strPort, Protocol const& protocol);
-    static std::string ParseDomain(std::string const& domain);
-    static std::string ParseDocument(std::string const& document);
-
-    static std::string GetStrFromProtocol(Protocol protocol);
-    static unsigned short ProtocolToDefaultPort(Protocol const& protocol);
-
-    static std::string BuildUrl(const std::string& domain, const std::string& document, Protocol protocol, unsigned short port);
-
     std::string m_url;
     std::string m_domain;
     std::string m_document;

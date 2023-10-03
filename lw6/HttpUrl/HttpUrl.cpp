@@ -10,6 +10,111 @@ const std::regex DOMAIN_REG(DOMAIN_REGULAR_EXPRESSION, std::regex_constants::ica
 const std::string DOCUMENT_REGULAR_EXPRESSION = R"(^(((?:/)*([^\s]*))*)$)";
 const std::regex DOCUMENT_REG(DOCUMENT_REGULAR_EXPRESSION, std::regex_constants::icase);
 
+namespace
+{
+    std::string GetStrFromProtocol(Protocol protocol)
+    {
+        switch (protocol)
+        {
+        case Protocol::HTTP:
+            return "http";
+        case Protocol::HTTPS:
+            return "https";
+        default:
+            throw CUrlParsingError("invalid url");
+        }
+    }
+
+    std::string BuildUrl(const std::string& domain, const std::string& document, Protocol protocol, unsigned short port)
+    {
+        std::ostringstream urlStream;
+        urlStream << GetStrFromProtocol(protocol) << "://" << domain;
+        if (port != DEFAULT_HTTP_PORT && port != DEFAULT_HTTPS_PORT)
+        {
+            urlStream << ':' << port;
+        }
+        urlStream << document;
+
+        return urlStream.str();
+    }
+
+    Protocol ParseProtocol(std::string const& strProtocol)
+    {
+        if (strProtocol == "http")
+        {
+            return Protocol::HTTP;
+        }
+        else if (strProtocol == "https")
+        {
+            return Protocol::HTTPS;
+        }
+        else
+        {
+            throw CUrlParsingError("invalid protocol");
+        }
+    };
+
+    unsigned short ProtocolToDefaultPort(Protocol const& protocol)
+    {
+        return (protocol == Protocol::HTTP) ? DEFAULT_HTTP_PORT : DEFAULT_HTTPS_PORT;
+    };
+
+    unsigned short ParsePort(std::string const& strPort, Protocol const& protocol)
+    {
+        if (strPort.length() == 0)
+        {
+            return ProtocolToDefaultPort(protocol);
+        }
+
+        try
+        {
+            int port = std::stoi(strPort);
+
+            if (port >= MIN_PORT && port <= MAX_PORT)
+            {
+                return static_cast<unsigned short>(port);
+            }
+
+            throw CUrlParsingError("error parsing port");
+        }
+        catch (const std::exception&)
+        {
+            throw CUrlParsingError("error parsing port");
+        }
+    };
+
+    std::string ParseDomain(std::string const& domain)
+    {
+        std::smatch matches;
+
+        if (!regex_search(domain, matches, DOMAIN_REG))
+        {
+            throw CUrlParsingError("invalid domain");
+        }
+
+        return matches[1];
+    };
+
+    std::string ParseDocument(std::string const& document)
+    {
+        std::smatch matches;
+
+        if (!std::regex_search(document, matches, DOCUMENT_REG))
+        {
+            throw CUrlParsingError("invalid document");
+        }
+
+        std::string parsedDocument = matches[1];
+
+        if (parsedDocument[0] != '/')
+        {
+            parsedDocument = '/' + parsedDocument;
+        }
+
+        return parsedDocument;
+    };
+}
+
 CHttpUrl::CHttpUrl(const std::string& url)
 {
     std::smatch matches;
@@ -94,107 +199,3 @@ unsigned short CHttpUrl::GetPort() const
 {
     return m_port;
 }
-
-std::string CHttpUrl::BuildUrl(const std::string& domain, const std::string& document, Protocol protocol, unsigned short port)
-{
-    std::ostringstream urlStream;
-    urlStream << GetStrFromProtocol(protocol) << "://" << domain;
-    if (port != DEFAULT_HTTP_PORT && port != DEFAULT_HTTPS_PORT)
-    {
-        urlStream << ':' << port;
-    }
-    urlStream << document;
-
-    return urlStream.str();
-}
-
-std::string CHttpUrl::GetStrFromProtocol(Protocol protocol)
-{
-    switch (protocol)
-    {
-    case Protocol::HTTP:
-        return "http";
-    case Protocol::HTTPS:
-        return "https";
-    default:
-        throw CUrlParsingError("invalid url");
-    }
-}
-
-Protocol CHttpUrl::ParseProtocol(std::string const& strProtocol)
-{
-    if (strProtocol == "http")
-    {
-        return Protocol::HTTP;
-    }
-    else if (strProtocol == "https")
-    {
-        return Protocol::HTTPS;
-    }
-    else
-    {
-        throw CUrlParsingError("invalid protocol");
-    }
-};
-
-unsigned short CHttpUrl::ProtocolToDefaultPort(Protocol const& protocol)
-{
-    return (protocol == Protocol::HTTP) ? DEFAULT_HTTP_PORT : DEFAULT_HTTPS_PORT;
-};
-
-unsigned short CHttpUrl::ParsePort(std::string const& strPort, Protocol const& protocol)
-{
-    if (strPort.length() == 0)
-    {
-        return ProtocolToDefaultPort(protocol);
-    }
-
-    try
-    {
-        int port = std::stoi(strPort);
-
-        if (port >= MIN_PORT && port <= MAX_PORT)
-        {
-            return static_cast<unsigned short>(port);
-        }
-        else
-        {
-            throw CUrlParsingError("error parsing port");
-        }
-    }
-    catch (const std::exception&)
-    {
-        throw CUrlParsingError("error parsing port");
-    }
-};
-
-std::string CHttpUrl::ParseDomain(std::string const& domain)
-{
-    std::smatch matches;
-
-    if (!regex_search(domain, matches, DOMAIN_REG))
-    {
-        throw CUrlParsingError("invalid domain");
-    }
-
-    return matches[1];
-};
-
-std::string CHttpUrl::ParseDocument(std::string const& document)
-{
-    std::smatch matches;
-
-    if (!std::regex_search(document, matches, DOCUMENT_REG))
-    {
-        throw CUrlParsingError("invalid document");
-    }
-
-    std::string parsedDocument = matches[1];
-
-    if (parsedDocument[0] != '/')
-    {
-        parsedDocument = '/' + parsedDocument;
-    }
-
-    return parsedDocument;
-};
