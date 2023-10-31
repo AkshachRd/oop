@@ -2,7 +2,7 @@
 #include "../StringList/StringList.h"
 #include "../StringList/StringListIterator.h"
 
-TEST_CASE("Checking the list has a size and is it empty or not")
+TEST_CASE("Check the list has a size and is it empty or not")
 {
 	CStringList testList;
 
@@ -14,7 +14,7 @@ TEST_CASE("Checking the list has a size and is it empty or not")
 	REQUIRE(testList.GetSize() == 1);
 }
 
-TEST_CASE("Checking the assignment and copying of the list")
+TEST_CASE("Check the assignment and copying of the list")
 {
 	CStringList testList1;
 	CStringList testList2;
@@ -32,6 +32,26 @@ TEST_CASE("Checking the assignment and copying of the list")
 
 	REQUIRE(!copyList.IsEmpty());
 	REQUIRE(copyList.GetSize() == 1);
+}
+
+TEST_CASE("Check the assignment and copying of the list with move semantic")
+{
+	CStringList testList1;
+
+	REQUIRE(testList1.IsEmpty());
+	REQUIRE(testList1.GetSize() == 0);
+
+	testList1.PushBack("first");
+	CStringList testList2(std::move(testList1));;
+
+	REQUIRE(!testList2.IsEmpty());
+	REQUIRE(testList2.GetSize() == 1);
+
+	CStringList testList3;
+	testList2 = std::move(testList3);
+
+	REQUIRE(testList2.IsEmpty());
+	REQUIRE(testList2.GetSize() == 0);
 }
 
 TEST_CASE("Check push back and front, insert and erase")

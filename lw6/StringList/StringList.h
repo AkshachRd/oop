@@ -50,6 +50,7 @@ public:
 
 	CStringList();
 	CStringList(const CStringList& list);
+	CStringList(CStringList&& list) noexcept;
 	~CStringList();
 
 	Iterator begin();
@@ -73,6 +74,7 @@ public:
 	void Clear();
 
 	CStringList& operator=(const CStringList& rhs);
+	CStringList& operator=(CStringList&& rhs) noexcept;
 private:
 	size_t m_size;
 
@@ -105,6 +107,13 @@ CStringList::CStringList(const CStringList& list)
 	}
 }
 
+CStringList::CStringList(CStringList&& list) noexcept
+{
+	m_first = list.m_first;
+	m_last = list.m_last;
+	m_size = list.m_size;
+}
+
 CStringList::~CStringList()
 {
 	Clear();
@@ -125,9 +134,23 @@ CStringList& CStringList::operator=(const CStringList& rhs)
 	return *this;
 }
 
+CStringList& CStringList::operator=(CStringList&& rhs) noexcept
+{
+	if (std::addressof(rhs) != this)
+	{
+		Clear();
+
+		m_first = rhs.m_first;
+		m_last = rhs.m_last;
+		m_size = rhs.m_size;
+	}
+
+	return *this;
+}
+
 void CStringList::Clear()
 {
-	if (m_first->next != m_last)
+	if (m_first->next != nullptr && m_last->prev && m_first->next != m_last)
 	{
 		CStringListMember* node = m_first->next;
 		m_first->next = m_last;
