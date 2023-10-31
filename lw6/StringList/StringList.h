@@ -139,47 +139,47 @@ void CStringList::Clear()
 	}
 }
 
-typename CStringList::Iterator CStringList::begin()
+CStringList::Iterator CStringList::begin()
 {
 	return Iterator(m_first->next);
 }
 
-typename CStringList::Iterator CStringList::end()
+CStringList::Iterator CStringList::end()
 {
 	return Iterator(m_last);
 }
 
-typename CStringList::ConstIterator CStringList::cbegin() const
+CStringList::ConstIterator CStringList::cbegin() const
 {
 	return ConstIterator(m_first->next);
 }
 
-typename CStringList::ConstIterator CStringList::cend() const
+CStringList::ConstIterator CStringList::cend() const
 {
 	return ConstIterator(m_last);
 }
 
-typename CStringList::ReverseIterator CStringList::rbegin()
+CStringList::ReverseIterator CStringList::rbegin()
 {
 	return std::reverse_iterator<Iterator>(end());
 }
 
-typename CStringList::ReverseIterator CStringList::rend()
+CStringList::ReverseIterator CStringList::rend()
 {
 	return std::reverse_iterator<Iterator>(begin());
 }
 
-typename CStringList::ConstReverseIterator CStringList::rcbegin()
+CStringList::ConstReverseIterator CStringList::rcbegin()
 {
 	return std::reverse_iterator<ConstIterator>(cend());
 }
 
-typename CStringList::ConstReverseIterator CStringList::rcend()
+CStringList::ConstReverseIterator CStringList::rcend()
 {
 	return std::reverse_iterator<ConstIterator>(cbegin());
 }
 
-typename CStringList::Iterator CStringList::Insert(Iterator const& pos, std::string const& data)
+CStringList::Iterator CStringList::Insert(Iterator const& pos, std::string const& data)
 {
 	auto newNode = new CStringListMember(data, nullptr, nullptr);
 
@@ -197,7 +197,7 @@ typename CStringList::Iterator CStringList::Insert(Iterator const& pos, std::str
 	return Iterator(newNode);
 }
 
-typename CStringList::Iterator CStringList::Erase(Iterator const& pos)
+CStringList::Iterator CStringList::Erase(Iterator const& pos)
 {
 	CStringListMember* beforePos = pos.m_pNode->prev;
 	CStringListMember* afterPos = pos.m_pNode->next;
