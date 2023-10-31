@@ -132,7 +132,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Body.h" />
-    <ClInclude Include="BodyController.h" />
     <ClInclude Include="Compound.h" />
     <ClInclude Include="Cone.h" />
     <ClInclude Include="Parallelepiped.h" />
@@ -142,7 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Body.cpp" />
-    <ClCompile Include="BodyController.cpp" />
     <ClCompile Include="Compound.cpp" />
     <ClCompile Include="Cone.cpp" />
     <ClCompile Include="Cylinder.cpp" />

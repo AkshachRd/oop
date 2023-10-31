@@ -112,10 +112,6 @@ CStringList::CStringList(CStringList&& list) noexcept
 	m_first = list.m_first;
 	m_last = list.m_last;
 	m_size = list.m_size;
-
-	list.Clear();
-	list.m_first->next = nullptr;
-	list.m_last->prev = nullptr;
 }
 
 CStringList::~CStringList()
@@ -147,10 +143,6 @@ CStringList& CStringList::operator=(CStringList&& rhs) noexcept
 		m_first = rhs.m_first;
 		m_last = rhs.m_last;
 		m_size = rhs.m_size;
-
-		rhs.Clear();
-		rhs.m_first->next = nullptr;
-		rhs.m_last->prev = nullptr;
 	}
 
 	return *this;

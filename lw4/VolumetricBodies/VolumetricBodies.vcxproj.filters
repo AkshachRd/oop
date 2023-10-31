@@ -36,9 +36,6 @@
     <ClInclude Include="Compound.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="BodyController.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Body.cpp">
@@ -63,9 +60,6 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="BodyController.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

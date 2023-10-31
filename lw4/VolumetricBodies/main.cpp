@@ -1,8 +1,8 @@
-﻿#include <string>
+﻿﻿#include <iostream>
+#include <string>
 #include <algorithm>
 #include "Body.h"
 #include "BodyController.h"
-#include <iostream>
 
 const std::string ERROR_MSG_INCORRECT_BODY = "Incorrect body is entered";
 const std::string MSG_NOT_BODIES = "Quantity of bodies is 0";
