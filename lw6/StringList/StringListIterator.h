@@ -7,7 +7,7 @@
 
 class CStringList;
 
-template<typename CMyListMember, typename Data>
+template<typename CStringListMember, typename Data>
 class CListIterator
 {
 	friend class CStringList;
@@ -29,36 +29,36 @@ public:
 	CListIterator operator++(int);
 	CListIterator operator--(int);
 private:
-	CListIterator(CMyListMember* value);
+	CListIterator(CStringListMember* value);
 
-	CMyListMember* m_pNode;
+	CStringListMember* m_pNode;
 };
 
-template <typename CMyListMember, typename Data>
-CListIterator<CMyListMember, Data>::CListIterator(CMyListMember* value)
+template <typename CStringListMember, typename Data>
+CListIterator<CStringListMember, Data>::CListIterator(CStringListMember* value)
 	: m_pNode(value)
 {}
 
-template <typename CMyListMember, typename Data>
-bool CListIterator<CMyListMember, Data>::operator==(const CListIterator<CMyListMember, Data>& it) const
+template <typename CStringListMember, typename Data>
+bool CListIterator<CStringListMember, Data>::operator==(const CListIterator<CStringListMember, Data>& it) const
 {
 	return m_pNode == it.m_pNode;
 }
 
-template <typename CMyListMember, typename Data>
-bool CListIterator<CMyListMember, Data>::operator!=(const CListIterator<CMyListMember, Data>& it) const
+template <typename CStringListMember, typename Data>
+bool CListIterator<CStringListMember, Data>::operator!=(const CListIterator<CStringListMember, Data>& it) const
 {
 	return m_pNode != it.m_pNode;
 }
 
-template <typename CMyListMember, typename Data>
-Data& CListIterator<CMyListMember, Data>::operator*() const
+template <typename CStringListMember, typename Data>
+Data& CListIterator<CStringListMember, Data>::operator*() const
 {
 	return m_pNode->data.value();
 }
 
-template <typename CMyListMember, typename Data>
-CListIterator<CMyListMember, Data>& CListIterator<CMyListMember, Data>::operator--()
+template <typename CStringListMember, typename Data>
+CListIterator<CStringListMember, Data>& CListIterator<CStringListMember, Data>::operator--()
 {
 	if (m_pNode->prev != nullptr)
 	{
@@ -67,8 +67,8 @@ CListIterator<CMyListMember, Data>& CListIterator<CMyListMember, Data>::operator
 	return *this;
 }
 
-template <typename CMyListMember, typename Data>
-CListIterator<CMyListMember, Data>& CListIterator<CMyListMember, Data>::operator++()
+template <typename CStringListMember, typename Data>
+CListIterator<CStringListMember, Data>& CListIterator<CStringListMember, Data>::operator++()
 {
 	if (m_pNode->next != nullptr)
 	{
@@ -77,16 +77,16 @@ CListIterator<CMyListMember, Data>& CListIterator<CMyListMember, Data>::operator
 	return *this;
 }
 
-template <typename CMyListMember, typename Data>
-CListIterator<CMyListMember, Data> CListIterator<CMyListMember, Data>::operator--(int)
+template <typename CStringListMember, typename Data>
+CListIterator<CStringListMember, Data> CListIterator<CStringListMember, Data>::operator--(int)
 {
 	CListIterator tmp(*this);
 	--(*this);
 	return tmp;
 }
 
-template <typename CMyListMember, typename Data>
-CListIterator<CMyListMember, Data> CListIterator<CMyListMember, Data>::operator++(int)
+template <typename CStringListMember, typename Data>
+CListIterator<CStringListMember, Data> CListIterator<CStringListMember, Data>::operator++(int)
 {
 	CListIterator tmp(*this);
 	++(*this);
